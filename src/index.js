@@ -3,8 +3,8 @@
  * verður gefnar staðsetningar.
  */
 
-import { el } from './lib/elements.js';
-import { weatherSearch } from './lib/weather.js';
+import { el } from "./lib/elements.js";
+import { weatherSearch } from "./lib/weather.js";
 
 /**
  * @typedef {Object} SearchLocation
@@ -19,27 +19,27 @@ import { weatherSearch } from './lib/weather.js';
  */
 const locations = [
   {
-    title: 'Reykjavík',
+    title: "Reykjavík",
     lat: 64.1355,
     lng: -21.8954,
   },
   {
-    title: 'Akureyri',
+    title: "Akureyri",
     lat: 65.6835,
     lng: -18.0878,
   },
   {
-    title: 'New York',
+    title: "New York",
     lat: 40.7128,
     lng: -74.006,
   },
   {
-    title: 'Tokyo',
+    title: "Tokyo",
     lat: 35.6764,
     lng: 139.65,
   },
   {
-    title: 'Sydney',
+    title: "Sydney",
     lat: 33.8688,
     lng: 151.2093,
   },
@@ -67,14 +67,14 @@ function renderResults(location, results) {
  * @param {Error} error
  */
 function renderError(error) {
-  // TODO útfæra
+	console.error(`error ${error.code}: ${error.message}`);
 }
 
 /**
  * Birta biðstöðu í viðmóti.
  */
 function renderLoading() {
-  console.log('render loading');
+  console.log("render loading");
   // TODO útfæra
 }
 
@@ -84,7 +84,7 @@ function renderLoading() {
  * @param {SearchLocation} location Staðsetning sem á að leita eftir.
  */
 async function onSearch(location) {
-  console.log('onSearch', location);
+  console.log("onSearch", location);
 
   // Birta loading state
   renderLoading();
@@ -100,8 +100,11 @@ async function onSearch(location) {
  * Framkvæmir leit að veðri fyrir núverandi staðsetningu.
  * Biður notanda um leyfi gegnum vafra.
  */
-async function onSearchMyLocation() {
-  // TODO útfæra
+async function onSearchMyLocation(loc) {
+  
+	var crd = loc.coords;
+
+	console.log(crd.latitude);
 }
 
 /**
@@ -113,11 +116,11 @@ async function onSearchMyLocation() {
 function renderLocationButton(locationTitle, onSearch) {
   // Notum `el` fallið til að búa til element og spara okkur nokkur skref.
   const locationElement = el(
-    'li',
-    { class: 'locations__location' },
+    "li",
+    { class: "locations__location" },
     el(
-      'button',
-      { class: 'locations__button', click: onSearch },
+      "button",
+      { class: "locations__button", click: onSearch },
       locationTitle,
     ),
   );
@@ -143,32 +146,36 @@ function renderLocationButton(locationTitle, onSearch) {
  */
 function render(container, locations, onSearch, onSearchMyLocation) {
   // Búum til <main> og setjum `weather` class
-  const parentElement = document.createElement('main');
-  parentElement.classList.add('weather');
+  const parentElement = document.createElement("main");
+  parentElement.classList.add("weather");
 
   // Búum til <header> með beinum DOM aðgerðum
-  const headerElement = document.createElement('header');
-  const heading = document.createElement('h1');
-  heading.appendChild(document.createTextNode('<fyrirsögn>'));
+  const headerElement = document.createElement("header");
+  const heading = document.createElement("h1");
+  heading.appendChild(document.createTextNode("<fyrirsögn>"));
   headerElement.appendChild(heading);
   parentElement.appendChild(headerElement);
 
   // TODO útfæra inngangstexta
   // Búa til <div class="loctions">
-  const locationsElement = document.createElement('div');
-  locationsElement.classList.add('locations');
+  const locationsElement = document.createElement("div");
+  locationsElement.classList.add("locations");
 
   // Búa til <ul class="locations__list">
-  const locationsListElement = document.createElement('ul');
-  locationsListElement.classList.add('locations__list');
+  const locationsListElement = document.createElement("ul");
+  locationsListElement.classList.add("locations__list");
 
   // <div class="loctions"><ul class="locations__list"></ul></div>
   locationsElement.appendChild(locationsListElement);
 
+  const myLocationButton = renderLocationButton("my Location", () => {
+	  navigator.geolocation.getCurrentPosition(onSearchMyLocation, renderError);
+  });
+  locationsListElement.appendChild(myLocationButton);
   // <div class="loctions"><ul class="locations__list"><li><li><li></ul></div>
   for (const location of locations) {
     const liButtonElement = renderLocationButton(location.title, () => {
-      console.log('Halló!!', location);
+      console.log("Halló!!", location);
       onSearch(location);
     });
     locationsListElement.appendChild(liButtonElement);
