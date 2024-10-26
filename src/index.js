@@ -121,7 +121,7 @@ function renderError(error) {
 		document.querySelector(".weather").removeChild(document.querySelector(".forecast"));
 	}
 
-  document.querySelector("h2").innerHTML = `Error ${error.code}: ${error.message}`;
+  document.querySelector("h3").innerHTML = `Error ${error.code}: ${error.message}`;
 }
 
 /**
@@ -129,7 +129,7 @@ function renderError(error) {
  */
 function renderLoading() {
   console.log("render loading");
-  document.querySelector("h2").innerHTML = "Loading...";
+  document.querySelector("h3").innerHTML = "Loading...";
 }
 
 /**
@@ -145,7 +145,7 @@ async function onSearch(location) {
 
   const results = await weatherSearch(location.lat, location.lng);
 
-  document.querySelector("h2").innerHTML =
+  document.querySelector("h3").innerHTML =
     `${location.title} ${location.lat} ${location.lng}`;
 
   console.log(results.hourly);
@@ -164,7 +164,7 @@ async function onSearchMyLocation(location) {
   renderLoading();
   const results = await weatherSearch(crd.latitude, crd.longitude);
 
-  document.querySelector("h2").innerHTML = `${crd.latitude} ${crd.longitude}`;
+  document.querySelector("h3").innerHTML = `${crd.latitude} ${crd.longitude}`;
 
   renderResults(location, results);
 }
@@ -224,10 +224,10 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   parentElement.appendChild(headerElement);
 
 	//Búum til inngangstexta
-	const table_heading = document.createElement("h2");
-	table_heading.appendChild(document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."));
+	const sub_heading = document.createElement("h2");
+	sub_heading.appendChild(document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."));
 
-	parentElement.appendChild(table_heading);
+	parentElement.appendChild(sub_heading);
 
   // TODO útfæra inngangstexta
   // Búa til <div class="loctions">
@@ -255,6 +255,11 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   }
 
   parentElement.appendChild(locationsElement);
+	
+	const table_heading = document.createElement("h3");
+	table_heading.appendChild(document.createTextNode(""));
+
+	parentElement.appendChild(table_heading);
 
   // TODO útfæra niðurstöðu element
 
