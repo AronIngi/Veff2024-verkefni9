@@ -223,6 +223,12 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   headerElement.appendChild(heading);
   parentElement.appendChild(headerElement);
 
+	//Búum til inngangstexta
+	const table_heading = document.createElement("h2");
+	table_heading.appendChild(document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."));
+
+	parentElement.appendChild(table_heading);
+
   // TODO útfæra inngangstexta
   // Búa til <div class="loctions">
   const locationsElement = document.createElement("div");
@@ -249,11 +255,6 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   }
 
   parentElement.appendChild(locationsElement);
-
-	const table_heading = document.createElement("h2");
-	table_heading.appendChild(document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."));
-
-	parentElement.appendChild(table_heading);
 
   // TODO útfæra niðurstöðu element
 
