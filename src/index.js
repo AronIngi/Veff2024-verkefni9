@@ -106,6 +106,8 @@ function renderError(error) {
 	const error_element = el("h2", {class: "forecast"}, `Error ${error.code}: ${error.message}`);
 	console.error(`error ${error.code}: ${error.message}`);
 
+	document.querySelector("h1").innerHTML = "ERROR"
+
 	renderIntoResultsContent(error_element);
 }
 
@@ -114,7 +116,7 @@ function renderError(error) {
  */
 function renderLoading() {
   console.log("render loading");
-  // TODO útfæra
+	document.querySelector("h1").innerHTML = "Loading...";
 }
 
 /**
@@ -129,6 +131,8 @@ async function onSearch(location) {
   renderLoading();
 
   const results = await weatherSearch(location.lat, location.lng);
+
+	document.querySelector("h1").innerHTML = `${location.title} ${location.lat} ${location.lng}`;
 
   console.log(results.hourly);
   // TODO útfæra
@@ -145,7 +149,11 @@ async function onSearchMyLocation(location) {
 	var crd = location.coords;
 
 	console.log(crd.latitude);
+
+	renderLoading();
 	const results = await weatherSearch(crd.lat, crd.lng);
+
+	document.querySelector("h1").innerHTML = `${crd.lat} ${crd.lng}`;
 
 	renderResults(location, results);
 }
@@ -187,6 +195,9 @@ function renderLocationButton(locationTitle, onSearch) {
  * @param {(location: SearchLocation) => void} onSearch
  * @param {() => void} onSearchMyLocation
  */
+
+var getMyPosition = (onSearchMyLocation) => { navigator.geolocation.getCurrentPosition(onSearchMyLocation, renderError); };
+
 function render(container, locations, onSearch, onSearchMyLocation) {
   // Búum til <main> og setjum `weather` class
   const parentElement = document.createElement("main");
@@ -195,7 +206,7 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   // Búum til <header> með beinum DOM aðgerðum
   const headerElement = document.createElement("header");
   const heading = document.createElement("h1");
-  heading.appendChild(document.createTextNode("<fyrirsögn>"));
+  heading.appendChild(document.createTextNode(""));
   headerElement.appendChild(heading);
   parentElement.appendChild(headerElement);
 
@@ -211,9 +222,9 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   // <div class="loctions"><ul class="locations__list"></ul></div>
   locationsElement.appendChild(locationsListElement);
 
-  const myLocationButton = renderLocationButton("my Location", () => {
-	  navigator.geolocation.getCurrentPosition(onSearchMyLocation, renderError);
-  });
+	getMyPosition(onSearchMyLocation);
+
+  const myLocationButton = renderLocationButton("My location", () => {getMyPosition(onSearchMyLocation)});
   locationsListElement.appendChild(myLocationButton);
   // <div class="loctions"><ul class="locations__list"><li><li><li></ul></div>
   for (const location of locations) {
