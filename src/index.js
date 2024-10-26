@@ -98,8 +98,8 @@ function renderResults(location, results) {
         "tr",
         {},
         el("th", {}, "Klukkustundir"),
-        el("th", {}, "Hitastig (°C)"),
-        el("th", {}, "Úrkoma (mm)"),
+        el("th", {}, `Hitastig (${results.hourly_units.temperature_2m})`),
+        el("th", {}, `Úrkoma (${results.hourly_units.precipitation})`),
       ),
     ),
     table_body,
@@ -113,16 +113,15 @@ function renderResults(location, results) {
  * @param {Error} error
  */
 function renderError(error) {
-  const error_element = el(
-    "h2",
-    { class: "forecast" },
-    `Error ${error.code}: ${error.message}`,
-  );
   console.error(`error ${error.code}: ${error.message}`);
 
-  document.querySelector("h1").innerHTML = "ERROR";
+	if(document.querySelector(".forecast"))
+	{
+		empty(document.querySelector(".forecast"));
+		document.querySelector(".weather").removeChild(document.querySelector(".forecast"));
+	}
 
-  renderIntoResultsContent(error_element);
+  document.querySelector("h2").innerHTML = `Error ${error.code}: ${error.message}`;
 }
 
 /**
@@ -130,7 +129,7 @@ function renderError(error) {
  */
 function renderLoading() {
   console.log("render loading");
-  document.querySelector("h1").innerHTML = "Loading...";
+  document.querySelector("h2").innerHTML = "Loading...";
 }
 
 /**
@@ -146,7 +145,7 @@ async function onSearch(location) {
 
   const results = await weatherSearch(location.lat, location.lng);
 
-  document.querySelector("h1").innerHTML =
+  document.querySelector("h2").innerHTML =
     `${location.title} ${location.lat} ${location.lng}`;
 
   console.log(results.hourly);
@@ -165,7 +164,7 @@ async function onSearchMyLocation(location) {
   renderLoading();
   const results = await weatherSearch(crd.latitude, crd.longitude);
 
-  document.querySelector("h1").innerHTML = `${crd.latitude} ${crd.longitude}`;
+  document.querySelector("h2").innerHTML = `${crd.latitude} ${crd.longitude}`;
 
   renderResults(location, results);
 }
@@ -220,7 +219,7 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   // Búum til <header> með beinum DOM aðgerðum
   const headerElement = document.createElement("header");
   const heading = document.createElement("h1");
-  heading.appendChild(document.createTextNode(""));
+  heading.appendChild(document.createTextNode("Veðurspá"));
   headerElement.appendChild(heading);
   parentElement.appendChild(headerElement);
 
@@ -236,8 +235,6 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   // <div class="loctions"><ul class="locations__list"></ul></div>
   locationsElement.appendChild(locationsListElement);
 
-  getMyPosition(onSearchMyLocation);
-
   const myLocationButton = renderLocationButton("My location", () => {
     getMyPosition(onSearchMyLocation);
   });
@@ -252,6 +249,11 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   }
 
   parentElement.appendChild(locationsElement);
+
+	const table_heading = document.createElement("h2");
+	table_heading.appendChild(document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."));
+
+	parentElement.appendChild(table_heading);
 
   // TODO útfæra niðurstöðu element
 
