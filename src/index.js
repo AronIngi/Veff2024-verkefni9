@@ -162,12 +162,10 @@ async function onSearch(location) {
 async function onSearchMyLocation(location) {
   var crd = location.coords;
 
-  console.log(crd.latitude);
-
   renderLoading();
-  const results = await weatherSearch(crd.lat, crd.lng);
+  const results = await weatherSearch(crd.latitude, crd.longitude);
 
-  document.querySelector("h1").innerHTML = `${crd.lat} ${crd.lng}`;
+  document.querySelector("h1").innerHTML = `${crd.latitude} ${crd.longitude}`;
 
   renderResults(location, results);
 }
