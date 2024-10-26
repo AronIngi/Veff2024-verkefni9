@@ -50,17 +50,17 @@ const locations = [
  * @param {Element} element
  */
 function renderIntoResultsContent(element) {
-	const class_name = `.${element.attributes.getNamedItem("class").value}`;
+  const class_name = `.${element.attributes.getNamedItem("class").value}`;
 
-	if(document.querySelector(class_name))
-	{
-		console.log("element already exists");
-		empty(document.querySelector(class_name));
-		document.querySelector(".weather").removeChild(document.querySelector(class_name));
-	}
-	
-	document.querySelector(".weather").appendChild(element);
+  if (document.querySelector(class_name)) {
+    console.log("element already exists");
+    empty(document.querySelector(class_name));
+    document
+      .querySelector(".weather")
+      .removeChild(document.querySelector(class_name));
+  }
 
+  document.querySelector(".weather").appendChild(element);
 }
 
 /**
@@ -69,33 +69,43 @@ function renderIntoResultsContent(element) {
  * @param {Array<import('./lib/weather.js').Forecast>} results
  */
 function renderResults(location, results) {
-	const table_body = el("tbody", {});
-	const data = results.hourly;
-	for(let i = 0; i < data.time.length; i++)
-	{
-		
-		const row = {
-			t_in_hours: data.time[i].split("T")[1],
-			temp: data.temperature_2m[i],
-			precipitation: data.precipitation[i]
-		};
+  const table_body = el("tbody", {});
+  const data = results.hourly;
+  for (let i = 0; i < data.time.length; i++) {
+    const row = {
+      t_in_hours: data.time[i].split("T")[1],
+      temp: data.temperature_2m[i],
+      precipitation: data.precipitation[i],
+    };
 
-		const table_row = el("tr", {}, 
-				 	el("td", {}, `${row.t_in_hours}`),
-					el("td", {}, `${row.temp}`),
-					el("td", {}, `${row.precipitation}`));
-		table_body.appendChild(table_row);
-	}
+    const table_row = el(
+      "tr",
+      {},
+      el("td", {}, `${row.t_in_hours}`),
+      el("td", {}, `${row.temp}`),
+      el("td", {}, `${row.precipitation}`),
+    );
+    table_body.appendChild(table_row);
+  }
 
-	const table = el("table", {class: "forecast"},
-			el("thead", {},
-				el("tr", {}, 
-				el("th", {}, "Klukkustundir"),
-				el("th", {}, "Hitastig"),
-				el("th", {}, "Úrkoma"))),
-			table_body);
-	
-	renderIntoResultsContent(table);
+  const table = el(
+    "table",
+    { class: "forecast" },
+    el(
+      "thead",
+      {},
+      el(
+        "tr",
+        {},
+        el("th", {}, "Klukkustundir"),
+        el("th", {}, "Hitastig"),
+        el("th", {}, "Úrkoma"),
+      ),
+    ),
+    table_body,
+  );
+
+  renderIntoResultsContent(table);
 }
 
 /**
@@ -103,12 +113,16 @@ function renderResults(location, results) {
  * @param {Error} error
  */
 function renderError(error) {
-	const error_element = el("h2", {class: "forecast"}, `Error ${error.code}: ${error.message}`);
-	console.error(`error ${error.code}: ${error.message}`);
+  const error_element = el(
+    "h2",
+    { class: "forecast" },
+    `Error ${error.code}: ${error.message}`,
+  );
+  console.error(`error ${error.code}: ${error.message}`);
 
-	document.querySelector("h1").innerHTML = "ERROR"
+  document.querySelector("h1").innerHTML = "ERROR";
 
-	renderIntoResultsContent(error_element);
+  renderIntoResultsContent(error_element);
 }
 
 /**
@@ -116,7 +130,7 @@ function renderError(error) {
  */
 function renderLoading() {
   console.log("render loading");
-	document.querySelector("h1").innerHTML = "Loading...";
+  document.querySelector("h1").innerHTML = "Loading...";
 }
 
 /**
@@ -132,12 +146,13 @@ async function onSearch(location) {
 
   const results = await weatherSearch(location.lat, location.lng);
 
-	document.querySelector("h1").innerHTML = `${location.title} ${location.lat} ${location.lng}`;
+  document.querySelector("h1").innerHTML =
+    `${location.title} ${location.lat} ${location.lng}`;
 
   console.log(results.hourly);
   // TODO útfæra
   // Hér ætti að birta og taka tillit til mismunandi staða meðan leitað er.
-	renderResults(location, results);
+  renderResults(location, results);
 }
 
 /**
@@ -145,17 +160,16 @@ async function onSearch(location) {
  * Biður notanda um leyfi gegnum vafra.
  */
 async function onSearchMyLocation(location) {
-  
-	var crd = location.coords;
+  var crd = location.coords;
 
-	console.log(crd.latitude);
+  console.log(crd.latitude);
 
-	renderLoading();
-	const results = await weatherSearch(crd.lat, crd.lng);
+  renderLoading();
+  const results = await weatherSearch(crd.lat, crd.lng);
 
-	document.querySelector("h1").innerHTML = `${crd.lat} ${crd.lng}`;
+  document.querySelector("h1").innerHTML = `${crd.lat} ${crd.lng}`;
 
-	renderResults(location, results);
+  renderResults(location, results);
 }
 
 /**
@@ -196,7 +210,9 @@ function renderLocationButton(locationTitle, onSearch) {
  * @param {() => void} onSearchMyLocation
  */
 
-var getMyPosition = (onSearchMyLocation) => { navigator.geolocation.getCurrentPosition(onSearchMyLocation, renderError); };
+var getMyPosition = (onSearchMyLocation) => {
+  navigator.geolocation.getCurrentPosition(onSearchMyLocation, renderError);
+};
 
 function render(container, locations, onSearch, onSearchMyLocation) {
   // Búum til <main> og setjum `weather` class
@@ -222,9 +238,11 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   // <div class="loctions"><ul class="locations__list"></ul></div>
   locationsElement.appendChild(locationsListElement);
 
-	getMyPosition(onSearchMyLocation);
+  getMyPosition(onSearchMyLocation);
 
-  const myLocationButton = renderLocationButton("My location", () => {getMyPosition(onSearchMyLocation)});
+  const myLocationButton = renderLocationButton("My location", () => {
+    getMyPosition(onSearchMyLocation);
+  });
   locationsListElement.appendChild(myLocationButton);
   // <div class="loctions"><ul class="locations__list"><li><li><li></ul></div>
   for (const location of locations) {
