@@ -115,13 +115,15 @@ function renderResults(location, results) {
 function renderError(error) {
   console.error(`error ${error.code}: ${error.message}`);
 
-	if(document.querySelector(".forecast"))
-	{
-		empty(document.querySelector(".forecast"));
-		document.querySelector(".weather").removeChild(document.querySelector(".forecast"));
-	}
+  if (document.querySelector(".forecast")) {
+    empty(document.querySelector(".forecast"));
+    document
+      .querySelector(".weather")
+      .removeChild(document.querySelector(".forecast"));
+  }
 
-  document.querySelector("h3").innerHTML = `Error ${error.code}: ${error.message}`;
+  document.querySelector("h3").innerHTML =
+    `Error ${error.code}: ${error.message}`;
 }
 
 /**
@@ -223,11 +225,13 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   headerElement.appendChild(heading);
   parentElement.appendChild(headerElement);
 
-	//Búum til inngangstexta
-	const sub_heading = document.createElement("h2");
-	sub_heading.appendChild(document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."));
+  //Búum til inngangstexta
+  const sub_heading = document.createElement("h2");
+  sub_heading.appendChild(
+    document.createTextNode("Veldu stað til að sjá hita- og úrkomuspá."),
+  );
 
-	parentElement.appendChild(sub_heading);
+  parentElement.appendChild(sub_heading);
 
   // TODO útfæra inngangstexta
   // Búa til <div class="loctions">
@@ -255,11 +259,11 @@ function render(container, locations, onSearch, onSearchMyLocation) {
   }
 
   parentElement.appendChild(locationsElement);
-	
-	const table_heading = document.createElement("h3");
-	table_heading.appendChild(document.createTextNode(""));
 
-	parentElement.appendChild(table_heading);
+  const table_heading = document.createElement("h3");
+  table_heading.appendChild(document.createTextNode(""));
+
+  parentElement.appendChild(table_heading);
 
   // TODO útfæra niðurstöðu element
 
